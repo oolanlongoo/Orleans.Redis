@@ -19,9 +19,11 @@ namespace Orleans.Runtime.ReminderService
     /// <summary>
     /// Class RedisReminderTable.
     /// Implements the <see cref="Orleans.IReminderTable" />
+    /// Implements the <see cref="System.IDisposable" />
     /// </summary>
     /// <seealso cref="Orleans.IReminderTable" />
-    public class RedisReminderTable : IReminderTable
+    /// <seealso cref="System.IDisposable" />
+    public class RedisReminderTable : IReminderTable, IDisposable
     {
         /// <summary>
         /// The grain reference converter
@@ -298,6 +300,15 @@ namespace Orleans.Runtime.ReminderService
             timer.Stop();
             //_logger.LogInformation(
             //    $"ClearTable: ServiceId={_serviceId} from Database={_db.Database} rows={keys.Length}, finished in {timer.Elapsed.TotalMilliseconds:0.00} ms");
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _serializationManager?.Dispose();
+            _connection?.Dispose();
         }
     }
 }
